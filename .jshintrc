@@ -2,6 +2,6 @@
   "undef": true,
   "eqeqeq": true,
   "unused": true,
-  "predef": [ "$" ],
+  "predef": [ "$", "window"],
   "esnext": true
 }
