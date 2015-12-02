@@ -64,7 +64,7 @@ var Http = function (window) {
 
             let onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
-                    resolve(xhr.responseText);
+                    resolve(xhr);
                 }
 
             };

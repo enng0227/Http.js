@@ -1,3 +1,6 @@
+
+> **Note:** under development
+
 A mini http library for browser.
 
 ```javascript
