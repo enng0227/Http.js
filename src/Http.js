@@ -103,12 +103,53 @@ var Http = function (window) {
 
     }
 
+    /**
+     *
+     * @param url
+     * @param name
+     * @param file
+     */
+    function sendFile(url, name, file) {
+
+        return new Promise(function (resolve, reject) {
+
+            let xhr = new XMLHttpRequest();
+            let formData = new FormData();
+
+            formData.append(name, file);
+
+            xhr.open('POST', url);
+
+            let onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    resolve(xhr);
+                }
+            };
+
+            xhr.onreadystatechange = onreadystatechange;
+            xhr.send(formData);
+        });
+
+    }
+
+    /**
+     *
+     * @param url
+     * @param name
+     * @param file
+     * @returns {*}
+     */
+    function file(url, name, file) {
+
+        return sendFile(url, name, file);
+    }
 
     return {
         "get":get,
         "post": post,
         "put":put,
-        "delete": del
+        "delete": del,
+        "file": file
     };
 
 } (window);
