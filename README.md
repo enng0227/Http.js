@@ -11,3 +11,10 @@ Http.get(url, {"key":"value"}).then(function (response) {
 ```
 
 support: `GET`, `POST`, `PUT`, `DELETE`
+
+TODO:
+
+```
+Http.file()
+Http.files()
+```

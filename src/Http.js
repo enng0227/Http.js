@@ -10,39 +10,9 @@ var Http = function (window) {
      * @param params
      * @returns {Promise}
      */
-    function get(url, params = undefined) {
+    function get(url, params) {
 
-        return new Promise(function (resolve, reject) {
-
-            let xhr = new XMLHttpRequest();
-
-            if (params !== undefined) {
-
-                let queryString = [];
-                for (var param in params) {
-                    queryString.push(param + '=' + params[param]);
-                }
-                queryString = queryString.join('&');
-                xhr.open('GET', url + '?' + queryString);
-
-            } else {
-
-                xhr.open('GET', url);
-
-            }
-
-
-            let onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    resolve(xhr);
-                }
-            };
-
-            xhr.onreadystatechange = onreadystatechange;
-            xhr.send();
-
-        });
-
+        return send('GET', url, params);
     }
 
     /**
@@ -53,27 +23,7 @@ var Http = function (window) {
      */
     function post(url, params) {
 
-        return new Promise(function (resolve, reject) {
-
-            let xhr = new XMLHttpRequest();
-            let formData = new FormData();
-
-            for (var param in params) {
-                formData.append(param, params[param]);
-            }
-
-            let onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    resolve(xhr);
-                }
-
-            };
-
-            xhr.open('POST', url);
-            xhr.onreadystatechange = onreadystatechange;
-            xhr.send(formData);
-        });
-
+        return send('POST', url, params);
     }
 
     /**
@@ -84,29 +34,7 @@ var Http = function (window) {
      */
     function put(url, params) {
 
-        return new Promise(function (resolve, reject) {
-
-            let xhr = new XMLHttpRequest();
-
-            let formData = new FormData();
-
-            for (var param in params) {
-                formData.append(param, params[param]);
-            }
-
-            let onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    resolve(xhr);
-                }
-
-            };
-
-            xhr.open('PUT', url);
-            xhr.onreadystatechange = onreadystatechange;
-            xhr.send(formData);
-
-        });
-
+        return send('PUT', url, params);
     }
 
     /**
@@ -115,27 +43,52 @@ var Http = function (window) {
      * @param params
      * @returns {Promise}
      */
-    function del(url, params = undefined) {
+    function del(url, params) {
+
+        return send('DELETE', url, params);
+    }
+
+    /**
+     *
+     * @param method
+     * @param url
+     * @param params
+     * @returns {Promise}
+     */
+    function send(method, url, params) {
 
         return new Promise(function (resolve, reject) {
 
             let xhr = new XMLHttpRequest();
+            let queryString = [];
+            let body = [];
 
-            if (params !== undefined) {
+            if (typeof params === 'undefined') {
 
-                let queryString = [];
-                for (var param in params) {
-                    queryString.push(param + '=' + params[param]);
-                }
-                queryString = queryString.join('&');
-                xhr.open('DELETE', url + '?' + queryString);
+                xhr.open(method, url);
 
             } else {
 
-                xhr.open('DELETE', url);
+                if (method === 'GET' || method === 'DELETE') {
+
+                    for (var param in params) {
+                        queryString.push(param + '=' + params[param]);
+                    }
+                    queryString = queryString.join('&');
+                    xhr.open(method, url + '?' + queryString);
+
+                } else {
+
+                    for (var param in params) {
+                        body.push(param + '=' + encodeURIComponent(params[param]));
+                    }
+                    body = body.join('&');
+
+                    xhr.open(method, url);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                }
 
             }
-
 
             let onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -144,10 +97,12 @@ var Http = function (window) {
             };
 
             xhr.onreadystatechange = onreadystatechange;
-            xhr.send();
+            xhr.send(body);
 
         });
+
     }
+
 
     return {
         "get":get,
