@@ -69,7 +69,7 @@ var Http = (function (window) {
                 xhr.open(method, url);
             } else {
 
-                if (method === 'GET' || method === 'DELETE') {
+                if (method === 'GET' || method === 'HEAD') {
 
                     for (var param in params) {
                         queryString.push(param + '=' + params[param]);
